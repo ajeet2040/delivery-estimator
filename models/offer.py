@@ -19,4 +19,4 @@ class Offer:
         :param weight: weight of package
         :return: offer_status: whether offer code is valid or not
         """
-        pass
+        return (self.min_weight <= weight <= self.max_weight) and (self.min_distance <= distance <= self.max_distance)

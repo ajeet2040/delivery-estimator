@@ -27,7 +27,7 @@ class TestPackage(unittest.TestCase):
         package = Package(id="PKG1", weight=5, distance=10, offer_code="OFR1")
         base_delivery_cost = 100
         expected_delivery_cost = 200
-        package.calculate_delivery_cost(base_delivery_cost, weight_multiplier=10, distance__multiplier=5)
+        package.calculate_delivery_cost(base_delivery_cost, weight_multiplier=10, distance_multiplier=5)
         self.assertIsNotNone(package.delivery_cost)
         self.assertEqual(package.delivery_cost, expected_delivery_cost)
 
@@ -37,7 +37,7 @@ class TestPackage(unittest.TestCase):
         base_delivery_cost = 100
         expected_delivery_cost = 200
 
-        package.calculate_delivery_cost(base_delivery_cost, weight_multiplier=10, distance__multiplier=10)
+        package.calculate_delivery_cost(base_delivery_cost, weight_multiplier=10, distance_multiplier=10)
         self.assertIsNotNone(package.delivery_cost)
         self.assertEqual(package.delivery_cost, expected_delivery_cost)
 

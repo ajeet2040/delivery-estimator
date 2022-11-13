@@ -18,16 +18,16 @@ class Package:
     total_delivery_cost: Optional[float] = 0
 
     def calculate_delivery_cost(self, base_delivery_cost: float, weight_multiplier: float,
-                                distance__multiplier: float) -> None:
+                                distance_multiplier: float) -> None:
         """
         Calculates delivery cost for the package.
         :param weight_multiplier: multiplication factor for weight
-        :param distance__multiplier: multiplication factor for distance
+        :param distance_multiplier: multiplication factor for distance
         :param base_delivery_cost: base delivery cost to be applied
         :return: None
         """
         self.delivery_cost = base_delivery_cost + (self.weight * weight_multiplier) + \
-            (self.distance * distance__multiplier)
+            (self.distance * distance_multiplier)
 
     def calculate_discount(self) -> None:
         """
