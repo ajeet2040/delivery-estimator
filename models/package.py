@@ -2,7 +2,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from offer import Offer
+from models.offer import Offer
+
 
 @dataclass
 class Package:
@@ -16,25 +17,29 @@ class Package:
     discount_amt: Optional[float] = 0
     total_delivery_cost: Optional[float] = 0
 
-    def calculate_delivery_cost(self, base_delivery_cost: float) -> None:
+    def calculate_delivery_cost(self, base_delivery_cost: float, weight_multiplier: float,
+                                distance__multiplier: float) -> None:
         """
         Calculates delivery cost for the package.
+        :param weight_multiplier: multiplication factor for weight
+        :param distance__multiplier: multiplication factor for distance
         :param base_delivery_cost: base delivery cost to be applied
         :return: None
         """
-        pass
+        self.delivery_cost = base_delivery_cost + (self.weight * weight_multiplier) + \
+            (self.distance * distance__multiplier)
 
-    def calculate_discount(self):
+    def calculate_discount(self) -> None:
         """
         Calculate Discount amount for the package.
         :return: None
         """
-        pass
+        if self.assigned_offer:
+            self.discount_amt = self.delivery_cost * (self.assigned_offer.discount_per/100)
 
-    def calculate_total_delivery_cost(self):
+    def calculate_total_delivery_cost(self) -> None:
         """
         Calculate total delivery cost for the package
         :return: None
         """
-        pass
-
+        self.total_delivery_cost = self.delivery_cost - self.discount_amt
