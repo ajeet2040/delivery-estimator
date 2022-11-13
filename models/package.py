@@ -16,6 +16,7 @@ class Package:
     delivery_cost: Optional[float] = 0
     discount_amt: Optional[float] = 0
     total_delivery_cost: Optional[float] = 0
+    delivery_time: Optional[float] = 0
 
     def calculate_delivery_cost(self, base_delivery_cost: float, weight_multiplier: float,
                                 distance_multiplier: float) -> None:

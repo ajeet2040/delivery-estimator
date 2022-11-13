@@ -35,12 +35,11 @@ class DeliveryCostEstimator:
         """
         self.offers = offers
 
-    def add_packages(self, packages: list) -> None:
+    def set_packages(self, packages: list) -> None:
         """
-        Sets packages.
-        :param packages: list of packages along with details
+        adds packages.
+        :param packages: list of packages objects
         :return: None
-        :raises TypeError in case Package object properties are invalid
         """
         self.packages = packages
 

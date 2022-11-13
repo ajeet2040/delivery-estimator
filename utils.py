@@ -1,6 +1,6 @@
 """This module is to define any utility methods needed by application"""
 import json
-from models.package import Package
+from models.vehicle import Vehicle
 from models.offer import Offer
 from models.package import Package
 
@@ -45,10 +45,27 @@ def create_offers(offers_data: list) -> list:
     :raises TypeError in case offer object properties are invalid
     """
     offers = []
-    for idx, offer_data in enumerate(offers_data):
+    for idx, offer in enumerate(offers_data):
         try:
-            offers.append(Offer(**offer_data))
+            offers.append(Offer(**offer))
         except TypeError as err:
             print(f"Make sure all properties of offer are setup in json file.")
             raise err
     return offers
+
+
+def create_vehicles(vehicles_data: list) -> list:
+    """
+    Creates Available vehicles.
+    :param vehicles_data: list of vehicles along with their properties
+    :return: offer objects
+    :raises TypeError in case offer object properties are invalid
+    """
+    vehicles = []
+    for idx, vehicle in enumerate(vehicles_data):
+        try:
+            vehicles.append(Vehicle(**vehicle))
+        except TypeError as err:
+            print(f"Make sure all properties of offer are setup in json file.")
+            raise err
+    return vehicles

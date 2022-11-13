@@ -1,6 +1,6 @@
 """Tests for module 'utils' """
 import unittest
-from utils import read_json_file, create_packages, create_offers
+from utils import read_json_file, create_packages, create_offers, create_vehicles
 from models.package import Package
 from models.offer import Offer
 from models.vehicle import Vehicle
@@ -34,6 +34,24 @@ class TestUtils(unittest.TestCase):
                 "offer_code": 'OFR003'
             }
         ]
+        cls.test_vehicles = [
+            {
+                "id": "V001",
+                "max_speed": 5,
+                "max_carriable_weight": 5,
+            },
+            {
+                "id": "V002",
+                "max_speed": 15,
+                "max_carriable_weight": 5,
+            },
+            {
+                "id": "V003",
+                "max_speed": 10,
+                "max_carriable_weight": 100,
+            }
+        ]
+
 
     def test_read_json_data_correctly(self):
         """Tests that we are able to set offers correctly"""
@@ -78,3 +96,19 @@ class TestUtils(unittest.TestCase):
         del self.test_offers_invalid[0]["code"]
         with self.assertRaises(TypeError) as err:
             create_offers(self.test_offers_invalid)
+
+    def test_create_vehicles_with_valid_data(self):
+        """Tests that we are able to create offers correctly"""
+        vehicles = create_vehicles(self.test_vehicles)
+        self.assertIsNotNone(vehicles)
+        self.assertIsInstance(vehicles, list)
+        for vehicle in vehicles:
+            self.assertIsInstance(vehicle, Vehicle)
+
+    def test_create_vehicles_with_invalid_data(self):
+        """Tests that offers should not be set in case of invalid data"""
+        self.test_vehicles_invalid = deepcopy(self.test_vehicles)
+        del self.test_vehicles_invalid[0]["max_speed"]
+        with self.assertRaises(TypeError) as err:
+            create_vehicles(self.test_vehicles_invalid)
+
