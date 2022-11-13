@@ -35,43 +35,11 @@ class TestDeliveryCostEstimator(unittest.TestCase):
             }
         ]
 
-    def test_set_offers_with_valid_data(self):
-        """Tests that we are able to set offers correctly"""
-        delivery_cost_estimator = DeliveryCostEstimator(base_delivery_cost=100, no_of_packages=2)
-        delivery_cost_estimator.set_offers(self.test_offers)
-        self.assertIsNotNone(delivery_cost_estimator.offers)
-        self.assertIsInstance(delivery_cost_estimator.offers, list)
-        for offer in delivery_cost_estimator.offers:
-            self.assertIsInstance(offer, Offer)
-
-    def test_set_offers_with_invalid_data(self):
-        """Tests that offers should not be set in case of invalid data"""
-        test_offers_path = 'tests/data/offers_invalid.json'
-        offers = read_json_file(test_offers_path)
-        delivery_cost_estimator = DeliveryCostEstimator(base_delivery_cost=100, no_of_packages=2)
-        with self.assertRaises(TypeError) as err:
-            delivery_cost_estimator.set_offers(offers)
-
-    def test_add_packages_with_valid_data(self):
-        """Tests that we are able to add packages correctly"""
-        delivery_cost_estimator = DeliveryCostEstimator(base_delivery_cost=100, no_of_packages=2)
-        delivery_cost_estimator.add_packages(self.test_packages)
-        self.assertIsNotNone(delivery_cost_estimator.packages)
-        self.assertIsInstance(delivery_cost_estimator.packages, list)
-        for package in delivery_cost_estimator.packages:
-            self.assertIsInstance(package, Package)
-
-    def test_add_packages_with_invalid_data(self):
-        """Tests that packages should not be set in case of invalid data"""
-        self.test_packages_invalid = deepcopy(self.test_packages)
-        del self.test_packages_invalid[0]["distance"]
-        delivery_cost_estimator = DeliveryCostEstimator(base_delivery_cost=100, no_of_packages=2)
-        with self.assertRaises(TypeError) as err:
-            delivery_cost_estimator.add_packages(self.test_packages_invalid)
-
     def test_assign_offer_to_package(self):
         """Tests that we are correctly set offer to package"""
         delivery_cost_estimator = DeliveryCostEstimator(base_delivery_cost=100, no_of_packages=10)
+        # Set offers and packages manually to avoid dependency on other methods
+
         for offer in self.test_offers:
             delivery_cost_estimator.offers.append(Offer(**offer))
         for package in self.test_packages:
@@ -86,6 +54,7 @@ class TestDeliveryCostEstimator(unittest.TestCase):
     def test_total_delivery_cost_package(self):
         """Tests that we are correctly set offer to package"""
         delivery_cost_estimator = DeliveryCostEstimator(base_delivery_cost=100, no_of_packages=10)
+        # Set offers and packages manually to avoid dependency on other methods
         for offer in self.test_offers:
             delivery_cost_estimator.offers.append(Offer(**offer))
         for package in self.test_packages:

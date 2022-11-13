@@ -27,19 +27,13 @@ class DeliveryCostEstimator:
         self.offers = []
         self.packages = []
 
-    def set_offers(self, offers_list: list) -> None:
+    def set_offers(self, offers: list) -> None:
         """
         Sets Available offers.
-        :param offers_list: list of offer along with criteria for discount
+        :param offers: list of offer objects
         :return: None
-        :raises TypeError in case offer object properties are invalid
         """
-        for idx, offer_data in enumerate(offers_list):
-            try:
-                self.offers.append(Offer(**offer_data))
-            except TypeError as err:
-                print(f"Make sure all properties of offer are setup in json file.")
-                raise err
+        self.offers = offers
 
     def add_packages(self, packages: list) -> None:
         """
@@ -48,12 +42,7 @@ class DeliveryCostEstimator:
         :return: None
         :raises TypeError in case Package object properties are invalid
         """
-        for idx, package in enumerate(packages):
-            try:
-                self.packages.append(Package(**package))
-            except TypeError as err:
-                print(f"Make sure all properties of package are provided correctly.")
-                raise err
+        self.packages = packages
 
     def assign_offer_package(self) -> None:
         """
