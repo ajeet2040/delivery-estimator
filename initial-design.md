@@ -6,11 +6,14 @@ The purpose of this file is to have a design for building out the application fo
 Build a delivery service with cost and time estimation based on certain fixed criteria.
 > NOTE: For details, please refer to the problem statement document.
 
-## Assumptions
+## Assumptions/Considerations
 1. For simplicity purpose of the application and as less master data is required, will not be using database here.
+
 
 ## Entities (Model) Design
 This section lists out the entities of the application and their attributes(fields).
+
+> Note: Will be using float for all numeric fields to be flexible to support decimals.
 
 1. Vehicle
 
@@ -33,14 +36,15 @@ This section lists out the entities of the application and their attributes(fiel
 
 3. Package 
 
-   | Column | Data Type | Description|
-   |--------------|-----------|-----------|
-   | id | text  | unique id for package|
-   | weight | number|
-   | distance | number|
-   | discount_amt | number|
-   | offer_code | text | offer code - relates to Offer entity|
-   | total_cost | number | offer code - relates to Offer entity|
+   | Column              | Data Type | Description                          |
+---------------------|--------------|--------------------------------------|-----------|
+   | id                  | text  | unique id for package                |
+   | weight              | number|
+   | distance            | number|
+   | offer_code         | text | offer code - relates to Offer entity |
+   | discount_amt        | number| - discount amount after applying offer 
+   | delivery_cost       | number | delivery cost                        |
+   | total_delivery_cost | number | total cost after applying discount   |
 
 
 ## Tech Stack
@@ -53,7 +57,9 @@ Planning to use below tech stack
 
 1. Create Dataclass for each entity. Keeping it as separate modules for isolation.
 2. Setup module to load master data initially (Offers)
-3. Keep Offers master data in a json file
+3. Keep Offers master data in a json file. This way new offers can be easily added to the application.
+   > NOTE: JSON file is used for simplicity purpose. For Real world app, these can be stored in database along with 
+   > other entities as well.
 3. One module for each challenge containing the core logic/algorithm.
 3. Several test cases for each challenge (TDD)
 5. CLI module for accepting inputs and providing outputs
