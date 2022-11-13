@@ -1,8 +1,6 @@
 """This module will be responsible for organising packages into shipments on available vehicles
 based on fixed delivery criteria.
 """
-
-
 class DeliveryTimeCalculator:
     """
     Responsible for organising packages into shipments on available vehicles
@@ -33,6 +31,9 @@ class DeliveryTimeCalculator:
         :return: None
         """
         self.packages = packages
+
+    def select_shipment_per_criteria(self, packages, vehicle):
+        pass
 
     def calculate_time_for_packages(self) -> None:
         pass
