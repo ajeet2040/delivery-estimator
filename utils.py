@@ -1,5 +1,7 @@
 """This module is to define any utility methods needed by application"""
 import json
+import math
+
 from models.vehicle import Vehicle
 from models.offer import Offer
 from models.package import Package
@@ -69,3 +71,7 @@ def create_vehicles(vehicles_data: list) -> list:
             print(f"Make sure all properties of offer are setup in json file.")
             raise err
     return vehicles
+
+
+def round_down_2_digits(num):
+    return math.floor((num * 100))/100.0

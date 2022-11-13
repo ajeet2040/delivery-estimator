@@ -1,6 +1,6 @@
 """Tests for module 'utils' """
 import unittest
-from utils import read_json_file, create_packages, create_offers, create_vehicles
+from utils import read_json_file, create_packages, create_offers, create_vehicles, round_down_2_digits
 from models.package import Package
 from models.offer import Offer
 from models.vehicle import Vehicle
@@ -112,3 +112,11 @@ class TestUtils(unittest.TestCase):
         with self.assertRaises(TypeError) as err:
             create_vehicles(self.test_vehicles_invalid)
 
+    def test_round_down_2_digits(self):
+        """Tests that offers should not be set in case of invalid data"""
+        print(round_down_2_digits(4.196667))
+        self.assertEqual(round_down_2_digits(4.196667), 4.19)
+
+
+if __name__ == "__main__":
+    unittest.main()
