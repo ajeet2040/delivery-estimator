@@ -28,10 +28,10 @@ This section lists out the entities of the application and their attributes(fiel
    | Column | Data Type | Description|
    |--------------|-----------|------|
    | code | text   | unique offer code|
-   | min_distance | number | mimimum distance of delivery required for offer to be valid|
+   | min_distance | number | minimum distance of delivery required for offer to be valid|
    | max_distance | number| maximum distance of delivery required for offer to be valid|
-   | min_weight | number| mimimum weight required for offer to be valid|
-   | max_weight | number| mimimum weight required for offer to be valid|
+   | min_weight | number| minimum weight required for offer to be valid|
+   | max_weight | number| minimum weight required for offer to be valid|
    | discount_per | number | discount in percentage of total cost|
 
 3. Package 
@@ -45,6 +45,8 @@ This section lists out the entities of the application and their attributes(fiel
    | discount_amt        | number| - discount amount after applying offer 
    | delivery_cost       | number | delivery cost                        |
    | total_delivery_cost | number | total cost after applying discount   |
+   | delivery_time | number | calculated delivery time for this package  |
+
 
 
 ## Tech Stack

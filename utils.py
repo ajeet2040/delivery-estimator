@@ -1,10 +1,13 @@
 """This module is to define any utility methods needed by application"""
 import json
 import math
+import builtins
+from typing import Any
+import sys
 
-from models.vehicle import Vehicle
-from models.offer import Offer
-from models.package import Package
+# from models.vehicle import Vehicle
+# from models.offer import Offer
+# from models.package import Package
 
 
 def read_json_file(file_path: str) -> list:
@@ -22,56 +25,129 @@ def read_json_file(file_path: str) -> list:
         raise err
 
 
-def create_packages(packages_data: list) -> list:
+# def create_packages(packages_data: list) -> list:
+#     """
+#     Create packages based on data provided.
+#     :param packages_data: list of package along with details
+#     :return: package objects
+#     :raises TypeError in case Package object properties are invalid
+#     """
+#     packages = []
+#     for idx, package in enumerate(packages_data):
+#         try:
+#             packages.append(Package(**package))
+#         except TypeError as err:
+#             print(f"Make sure all properties of package are provided correctly.")
+#             raise err
+#     return packages
+#
+
+def create_objects(objects_data: list, object_class: object) -> list:
     """
     Create packages based on data provided.
-    :param packages_data: list of package along with details
-    :return: package objects
+    :param object_class: Class for which object is to created
+    :param objects_data: list of dict objects along with details
+    :return: objects created
     :raises TypeError in case Package object properties are invalid
     """
-    packages = []
-    for idx, package in enumerate(packages_data):
+    objects = []
+    for idx, data in enumerate(objects_data):
         try:
-            packages.append(Package(**package))
+            objects.append(object_class(**data))
         except TypeError as err:
-            print(f"Make sure all properties of package are provided correctly.")
+            print(f"Make sure all properties of {object_class.__name__}  are provided correctly.")
             raise err
-    return packages
+    return objects
 
 
-def create_offers(offers_data: list) -> list:
+# def create_offers(offers_data: list) -> list:
+#     """
+#     Sets Available offers.
+#     :param offers_data: list of offer along with criteria for discount
+#     :return: offer objects
+#     :raises TypeError in case offer object properties are invalid
+#     """
+#     offers = []
+#     for idx, offer in enumerate(offers_data):
+#         try:
+#             offers.append(Offer(**offer))
+#         except TypeError as err:
+#             print(f"Make sure all properties of offer are setup in json file.")
+#             raise err
+#     return offers
+#
+
+# def create_vehicles(vehicles_data: list) -> list:
+#     """
+#     Creates Available vehicles.
+#     :param vehicles_data: list of vehicles along with their properties
+#     :return: offer objects
+#     :raises TypeError in case offer object properties are invalid
+#     """
+#     vehicles = []
+#     for idx, vehicle in enumerate(vehicles_data):
+#         try:
+#             vehicles.append(Vehicle(**vehicle))
+#         except TypeError as err:
+#             print(f"Make sure all properties of offer are setup in json file.")
+#             raise err
+#     return vehicles
+#
+
+def round_down_2_digits(num: float) -> float:
     """
-    Sets Available offers.
-    :param offers_data: list of offer along with criteria for discount
-    :return: offer objects
-    :raises TypeError in case offer object properties are invalid
+    Rounds down to 2 decimal digits if more are present.
+    :param num: number to be rounded
+    :return: rounded number
     """
-    offers = []
-    for idx, offer in enumerate(offers_data):
-        try:
-            offers.append(Offer(**offer))
-        except TypeError as err:
-            print(f"Make sure all properties of offer are setup in json file.")
-            raise err
-    return offers
-
-
-def create_vehicles(vehicles_data: list) -> list:
-    """
-    Creates Available vehicles.
-    :param vehicles_data: list of vehicles along with their properties
-    :return: offer objects
-    :raises TypeError in case offer object properties are invalid
-    """
-    vehicles = []
-    for idx, vehicle in enumerate(vehicles_data):
-        try:
-            vehicles.append(Vehicle(**vehicle))
-        except TypeError as err:
-            print(f"Make sure all properties of offer are setup in json file.")
-            raise err
-    return vehicles
-
-
-def round_down_2_digits(num):
     return math.floor((num * 100))/100.0
+
+
+def input_check_and_conversion(input_data: list, expected_inputs: list) -> Any:
+    """
+    Validates input and converts to the relevant type.
+    :param input_data: data entered by user
+    :param expected_inputs: list of tuples with 'Name', 'type to be converted', 'Label of type',
+    'greater than value', 'max limit'
+    :return: Converted data if validation success else false
+    """
+    if not len(input_data) == len(expected_inputs):
+        print("Please enter correct number of data as requested!")
+        return False
+    for idx, expected_data in enumerate(expected_inputs):
+        # Check for data type
+        try:
+            conversion = getattr(builtins, expected_data[1])
+            input_data[idx] = conversion(input_data[idx])
+        except ValueError:
+            print(f"{expected_data[0]} should be {expected_data[2]}")
+            return False
+        # Check for min value
+        if expected_data[3] is not False:
+            if not input_data[idx] > expected_data[3]:
+                print(f"{expected_data[0]} should be more than {expected_data[3]}")
+                return False
+        # Check for max value
+        if expected_data[4] is not False:
+            if input_data[idx] > expected_data[4]:
+                print(f"{expected_data[0]} should not be more than {expected_data[4]}")
+                return False
+    return input_data
+
+
+def get_user_input(expected_inputs: list) -> list:
+    """
+    Prompts, fetches user input and validates and converts them.
+    :param expected_inputs: list of tuples with 'Name', 'type to be converted', 'Label of type',
+    :return: Converted data
+    """
+    message = f"Enter {', '.join(x[0] for x in expected_inputs)} separated by spaces. (type 'EXIT' to close app.)"
+    print(message)
+    while True:
+        input_data = list(map(lambda x: x.strip(), input().split()))
+        if input_data == ['EXIT']:
+            sys.exit(0)
+        input_data = input_check_and_conversion(input_data, expected_inputs)
+        if input_data:
+            break
+    return input_data

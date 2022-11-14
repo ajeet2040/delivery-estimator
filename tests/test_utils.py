@@ -1,10 +1,12 @@
 """Tests for module 'utils' """
 import unittest
 import json
-from utils import read_json_file, create_packages, create_offers, create_vehicles, round_down_2_digits
-from models.package import Package
 from models.offer import Offer
 from models.vehicle import Vehicle
+from models.package import Package
+
+from utils import read_json_file, create_objects, round_down_2_digits
+
 from copy import deepcopy
 
 
@@ -51,7 +53,7 @@ class TestUtils(unittest.TestCase):
 
     def test_create_packages_with_valid_data(self):
         """Tests that we are able to add packages correctly"""
-        packages = create_packages(self.test_packages)
+        packages = create_objects(self.test_packages, Package)
         self.assertIsNotNone(packages)
         self.assertIsInstance(packages, list)
         for package in packages:
@@ -62,11 +64,11 @@ class TestUtils(unittest.TestCase):
         self.test_packages_invalid = deepcopy(self.test_packages)
         del self.test_packages_invalid[0]["distance"]
         with self.assertRaises(TypeError) as err:
-            create_packages(self.test_packages_invalid)
+            create_objects(self.test_packages_invalid, Package)
 
-    def test_create_packages_with_valid_data(self):
+    def test_create_offers_with_valid_data(self):
         """Tests that we are able to create offers correctly"""
-        offers = create_offers(self.test_offers)
+        offers = create_objects(self.test_offers, Offer)
         self.assertIsNotNone(offers)
         self.assertIsInstance(offers, list)
         for offer in offers:
@@ -77,11 +79,11 @@ class TestUtils(unittest.TestCase):
         self.test_offers_invalid = deepcopy(self.test_offers)
         del self.test_offers_invalid[0]["code"]
         with self.assertRaises(TypeError) as err:
-            create_offers(self.test_offers_invalid)
+            create_objects(self.test_offers_invalid, Offer)
 
     def test_create_vehicles_with_valid_data(self):
         """Tests that we are able to create offers correctly"""
-        vehicles = create_vehicles(self.test_vehicles)
+        vehicles = create_objects(self.test_vehicles, Vehicle)
         self.assertIsNotNone(vehicles)
         self.assertIsInstance(vehicles, list)
         for vehicle in vehicles:
@@ -92,7 +94,7 @@ class TestUtils(unittest.TestCase):
         self.test_vehicles_invalid = deepcopy(self.test_vehicles)
         del self.test_vehicles_invalid[0]["max_speed"]
         with self.assertRaises(TypeError) as err:
-            create_vehicles(self.test_vehicles_invalid)
+            create_objects(self.test_vehicles_invalid, Vehicle)
 
     def test_round_down_2_digits(self):
         """Tests that offers should not be set in case of invalid data"""

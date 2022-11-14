@@ -7,7 +7,8 @@ from models.package import Package
 from copy import deepcopy
 
 
-def assign_test_packages_vehicles(delivery_shipments_assigner: DeliveryShipmentsAssigner, packages: list, vehicles: list):
+def assign_test_packages_vehicles(delivery_shipments_assigner: DeliveryShipmentsAssigner, packages: list,
+                                  vehicles: list):
     """
     Helper method to add packages and vehicles to class directly for testing purpose
     :param delivery_shipments_assigner: DeliveryTimeCalculator instance
@@ -144,15 +145,14 @@ class TestDeliveryTimeCalculator(unittest.TestCase):
         self.assertEqual(selected_shipment["total_round_time"], 0.84)
         self.assertEqual(selected_shipment["vehicle"], expected_vehicle)
 
-    def test_create_shipments_delivery(self):
-        """Tests that we are correctly calculate delivery time for packages"""
+    def test_create_shipments_delivery_1(self):
+        """Tests that we are correctly calculate delivery time for packages - test1"""
         # Input packages and vehicle
         with open('tests/data/shipments/shipment1_packages.json', 'r') as file:
             self.test_packages = json.load(file)
         delivery_shipments_assigner = DeliveryShipmentsAssigner(no_of_vehicles=2)
         # Set offers and packages manually to avoid dependency on other methods
         assign_test_packages_vehicles(delivery_shipments_assigner, self.test_packages, self.test_vehicles)
-        delivery_shipments_assigner.pending_packages = delivery_shipments_assigner.packages
 
         delivery_shipments_assigner.create_shipments_for_delivery()
 
@@ -170,6 +170,42 @@ class TestDeliveryTimeCalculator(unittest.TestCase):
         self.assertEqual(0.85, delivery_shipments_assigner.packages[3].delivery_time)
         # Package PKG5
         self.assertEqual(4.18, delivery_shipments_assigner.packages[4].delivery_time)
+
+    def test_create_shipments_delivery_2(self):
+        """Tests that we are correctly calculate delivery time for packages - test 2"""
+        # Input packages and vehicle
+        with open('tests/data/shipments/packages1.json', 'r') as file:
+            self.test_packages = json.load(file)
+        delivery_shipments_assigner = DeliveryShipmentsAssigner(no_of_vehicles=1)
+        # Set offers and packages manually to avoid dependency on other methods
+        assign_test_packages_vehicles(delivery_shipments_assigner, self.test_packages, self.test_vehicles[:1])
+
+        delivery_shipments_assigner.create_shipments_for_delivery()
+
+        # Tests
+        self.assertTrue(delivery_shipments_assigner.all_shipments_assigned)
+        self.assertIsNotNone(delivery_shipments_assigner.shipments)
+        self.assertEqual(len(delivery_shipments_assigner.pending_packages), 0)
+        # Package PKG1
+        self.assertEqual(0.14, delivery_shipments_assigner.packages[0].delivery_time)
+
+    def test_create_shipments_delivery_3(self):
+        """Tests that we are not able to create shipments if delivery fails"""
+        # Input packages and vehicle
+        with open('tests/data/shipments/packages2.json', 'r') as file:
+            self.test_packages = json.load(file)
+        delivery_shipments_assigner = DeliveryShipmentsAssigner(no_of_vehicles=1)
+        # Set offers and packages manually to avoid dependency on other methods
+        assign_test_packages_vehicles(delivery_shipments_assigner, self.test_packages, self.test_vehicles[:1])
+
+        delivery_shipments_assigner.create_shipments_for_delivery()
+
+        # Tests
+        self.assertFalse(delivery_shipments_assigner.all_shipments_assigned)
+        self.assertFalse(delivery_shipments_assigner.shipments)
+        self.assertEqual(len(delivery_shipments_assigner.pending_packages), 1)
+        # Package PKG1
+        self.assertEqual(0, delivery_shipments_assigner.packages[0].delivery_time)
 
 
 if __name__ == "__main__":

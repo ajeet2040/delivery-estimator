@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from models.offer import Offer
+from utils import round_down_2_digits
 
 
 @dataclass
@@ -27,8 +28,8 @@ class Package:
         :param base_delivery_cost: base delivery cost to be applied
         :return: None
         """
-        self.delivery_cost = base_delivery_cost + (self.weight * weight_multiplier) + \
-            (self.distance * distance_multiplier)
+        self.delivery_cost = round_down_2_digits(base_delivery_cost + (self.weight * weight_multiplier) +
+                                                 (self.distance * distance_multiplier))
 
     def calculate_discount(self) -> None:
         """
@@ -36,11 +37,11 @@ class Package:
         :return: None
         """
         if self.assigned_offer:
-            self.discount_amt = self.delivery_cost * (self.assigned_offer.discount_per/100)
+            self.discount_amt = round_down_2_digits(self.delivery_cost * (self.assigned_offer.discount_per / 100))
 
     def calculate_total_delivery_cost(self) -> None:
         """
         Calculate total delivery cost for the package
         :return: None
         """
-        self.total_delivery_cost = self.delivery_cost - self.discount_amt
+        self.total_delivery_cost = round_down_2_digits(self.delivery_cost - self.discount_amt)

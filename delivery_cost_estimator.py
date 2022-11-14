@@ -1,7 +1,5 @@
 """This module will be responsible for working with different packages in a shipment and setting up
 their delivery cost considering any discount if applicable"""
-from models.offer import Offer
-from models.package import Package
 
 
 class DeliveryCostEstimator:

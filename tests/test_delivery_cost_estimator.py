@@ -4,7 +4,6 @@ from delivery_cost_estimator import DeliveryCostEstimator
 from utils import read_json_file
 from models.offer import Offer
 from models.package import Package
-from copy import deepcopy
 
 
 class TestDeliveryCostEstimator(unittest.TestCase):
@@ -37,7 +36,7 @@ class TestDeliveryCostEstimator(unittest.TestCase):
 
     def test_assign_offer_to_package(self):
         """Tests that we are correctly set offer to package"""
-        delivery_cost_estimator = DeliveryCostEstimator(base_delivery_cost=100, no_of_packages=10)
+        delivery_cost_estimator = DeliveryCostEstimator(base_delivery_cost=100, no_of_packages=3)
         # Set offers and packages manually to avoid dependency on other methods
 
         for offer in self.test_offers:
@@ -53,7 +52,7 @@ class TestDeliveryCostEstimator(unittest.TestCase):
 
     def test_total_delivery_cost_package(self):
         """Tests that we are correctly set offer to package"""
-        delivery_cost_estimator = DeliveryCostEstimator(base_delivery_cost=100, no_of_packages=10)
+        delivery_cost_estimator = DeliveryCostEstimator(base_delivery_cost=100, no_of_packages=3)
         # Set offers and packages manually to avoid dependency on other methods
         for offer in self.test_offers:
             delivery_cost_estimator.offers.append(Offer(**offer))
@@ -73,7 +72,30 @@ class TestDeliveryCostEstimator(unittest.TestCase):
         # Package PKG3
         self.assertEqual(delivery_cost_estimator.packages[2].delivery_cost, 700)
         self.assertEqual(delivery_cost_estimator.packages[2].discount_amt, 35)
-        self.assertEqual(delivery_cost_estimator.packages[2].total_delivery_cost,665)
+        self.assertEqual(delivery_cost_estimator.packages[2].total_delivery_cost, 665)
+
+    def test_total_delivery_cost_package_2(self):
+        """Tests that we are correctly set offer to package case 2"""
+        delivery_cost_estimator = DeliveryCostEstimator(base_delivery_cost=100, no_of_packages=1)
+        test_packages = [
+            {
+                "id": "PKG4",
+                "weight": 110,
+                "distance": 60,
+                "offer_code": 'OFR002'
+            }
+        ]
+        # Set offers and packages manually to avoid dependency on other methods
+        for offer in self.test_offers:
+            delivery_cost_estimator.offers.append(Offer(**offer))
+        for package in test_packages:
+            delivery_cost_estimator.packages.append(Package(**package))
+        delivery_cost_estimator.packages[0].assigned_offer = delivery_cost_estimator.offers[1]
+        delivery_cost_estimator.calculate_delivery_cost()
+        # Package PKG1
+        self.assertEqual(delivery_cost_estimator.packages[0].delivery_cost, 1500)
+        self.assertEqual(delivery_cost_estimator.packages[0].discount_amt, 105)
+        self.assertEqual(delivery_cost_estimator.packages[0].total_delivery_cost, 1395)
 
 
 if __name__ == "__main__":
