@@ -1,0 +1,26 @@
+[
+  {
+    "code": "OFR001",
+    "min_distance": 0,
+    "max_distance": 200,
+    "min_weight": 70,
+    "max_weight": 200,
+    "discount_per": 10
+  },
+  {
+    "code": "OFR002",
+    "min_distance": 50,
+    "max_distance": 150,
+    "min_weight": 100,
+    "max_weight": 250,
+    "discount_per": 7
+  },
+  {
+    "code": "OFR003",
+    "min_distance": 50,
+    "max_distance": 250,
+    "min_weight": 10,
+    "max_weight": 150,
+    "discount_per": 5
+  }
+]

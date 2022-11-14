@@ -1,0 +1,32 @@
+[
+      {
+          "id": "PKG1",
+          "weight": 50,
+          "distance": 30,
+          "offer_code": "OFR00"
+      },
+      {
+          "id": "PKG2",
+          "weight": 75,
+          "distance": 125,
+          "offer_code": "OFR008"
+      },
+      {
+          "id": "PKG3",
+          "weight": 175,
+          "distance": 100,
+          "offer_code": "OFR003"
+      },
+      {
+          "id": "PKG4",
+          "weight": 110,
+          "distance": 60,
+          "offer_code": "OFR002"
+      },
+      {
+          "id": "PKG5",
+          "weight": 155,
+          "distance": 95,
+          "offer_code": "NA"
+      }
+]
