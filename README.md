@@ -28,11 +28,12 @@ an offer code (if applicable).
 
 ## Testing
     
-   Run the below command from root directory. 
-    ```
-    python -m unittest discover -s tests -v
-    ```
-    Refer https://docs.python.org/3/library/unittest.html#command-line-interface for different ways to run.
+Run the below command from root directory. 
+```
+python -m unittest discover -s tests -v
+```
+
+Refer https://docs.python.org/3/library/unittest.html#command-line-interface for different ways to run.
 
 ## Assumptions:
 1. The fields: discount, delivery cost are rounded down to two decimal digits.
