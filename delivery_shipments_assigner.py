@@ -3,10 +3,10 @@ based on fixed delivery criteria.
 """
 from copy import copy, deepcopy
 from itertools import combinations
-import math
 from utils import round_down_2_digits
 
-class DeliveryTimeCalculator:
+
+class DeliveryShipmentsAssigner:
     """
     Responsible for organising packages into shipments on available vehicles
     based on fixed delivery criteria.
@@ -20,7 +20,10 @@ class DeliveryTimeCalculator:
         self.no_of_vehicles = no_of_vehicles
         self.vehicles = []
         self.packages = []
-        self.shipments_organising_status = False
+        self.pending_packages = []     # keeps track of packages pending to be delivered
+        self.current_shipment = {}     # Selected shipment for next delivery
+
+        self.all_shipments_assigned = False  #
         self.shipments = []
 
     def set_vehicles(self, vehicles: list) -> None:
@@ -39,23 +42,24 @@ class DeliveryTimeCalculator:
         """
         self.packages = packages
 
-    def select_shipment_per_criteria(self, packages: list, vehicle: list) -> dict:
+    def create_shipment_per_criteria(self, vehicle: object) -> dict:
         """
-        Algorithm ot select shipments based on certain fixed delivery criteria
+        Algorithm ot create shipments based on certain fixed delivery criteria
         :param packages:
         :param vehicle:
         :return: shipment dict with packages, total weight, round time, vehicle used
         """
+        self.current_shipment = {}
         selected_shipment_info = {
             "packages": [],
             "total_weight": 0,
             "total_round_time": 0,
             "vehicle": vehicle
         }
-        for group_length in range(len(packages), 0, -1):
+        for group_length in range(len(self.pending_packages), 0, -1):
             selected_packages_group = []
             # Create packages group for maximum length
-            packages_group = combinations(packages, group_length)
+            packages_group = combinations(self.pending_packages, group_length)
             # Select packages on criteria: total shipment weight <= max_carriable_weight
             for group in packages_group:
                 shipment_info = deepcopy(selected_shipment_info)
@@ -83,30 +87,30 @@ class DeliveryTimeCalculator:
             if len(selected_packages_group_time) > 1:
                 selected_packages_group = min(selected_packages_group_time, key=lambda item: item["total_round_time"])
             if selected_packages_group:
-                selected_shipment = selected_packages_group[0]
-                return selected_shipment
+                self.current_shipment = selected_packages_group[0]
+                break
         print("No valid shipment found as per delivery criteria")
-        return {}
 
-    def create_shipments_delivery(self) -> None:
+    def create_shipments_for_delivery(self) -> None:
         """
         Main Algorithm for creating shipments based on number of vehicles available.
         :return: None
         """
-        packages_pending = copy(self.packages)
+        self.pending_packages = copy(self.packages)
         vehicles_available = [{"vehicle": v, "next_available_time": 0} for v in self.vehicles]
-        while len(packages_pending) > 0:
+        while len(self.pending_packages) > 0:
             selected_vehicle = (min(vehicles_available, key=lambda item: item["next_available_time"]))
-            selected_shipment = self.select_shipment_per_criteria(packages_pending, selected_vehicle["vehicle"])
-            if not selected_shipment:
-                print("Shipments delivery failed as shipment could not be formed as per delivery criteria!")
+            self.create_shipment_per_criteria(selected_vehicle["vehicle"])
+            if not self.current_shipment:
+                print("Delivery failed as shipment could not be formed as per delivery criteria!")
                 break
             # Update packages delivery time as per vehicle available time
-            for package in selected_shipment["packages"]:
+            for package in self.current_shipment["packages"]:
                 package.delivery_time += selected_vehicle["next_available_time"]
                 package.delivery_time = round_down_2_digits(package.delivery_time)
-            self.shipments.append(selected_shipment)
-            packages_pending = list(filter(lambda item: item not in selected_shipment["packages"], packages_pending))
+            self.shipments.append(self.current_shipment)
+            self.pending_packages = list(filter(lambda item: item not in self.current_shipment["packages"],
+                                                 self.pending_packages))
             # update vehicle next available time based on total round time of shipment
-            selected_vehicle["next_available_time"] += selected_shipment["total_round_time"]
-        self.shipments_organising_status = True
+            selected_vehicle["next_available_time"] += self.current_shipment["total_round_time"]
+        self.all_shipments_assigned = True

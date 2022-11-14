@@ -1,5 +1,6 @@
 """Tests for module 'utils' """
 import unittest
+import json
 from utils import read_json_file, create_packages, create_offers, create_vehicles, round_down_2_digits
 from models.package import Package
 from models.offer import Offer
@@ -12,28 +13,10 @@ class TestUtils(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        test_offers_path = 'tests/data/offers.json'
-        cls.test_offers = read_json_file(test_offers_path)
-        cls.test_packages = [
-            {
-                "id": "PKG1",
-                "weight": 5,
-                "distance": 5,
-                "offer_code": 'OFR001'
-            },
-            {
-                "id": "PKG2",
-                "weight": 15,
-                "distance": 5,
-                "offer_code": 'OFR002'
-            },
-            {
-                "id": "PKG3",
-                "weight": 10,
-                "distance": 100,
-                "offer_code": 'OFR003'
-            }
-        ]
+        with open('tests/data/offers/offers.json', 'r') as file:
+            cls.test_offers = json.load(file)
+        with open('tests/data/shipments/shipment1_packages.json', 'r') as file:
+            cls.test_packages = json.load(file)
         cls.test_vehicles = [
             {
                 "id": "V001",
@@ -52,10 +35,9 @@ class TestUtils(unittest.TestCase):
             }
         ]
 
-
     def test_read_json_data_correctly(self):
         """Tests that we are able to set offers correctly"""
-        file_path = 'tests/data/offers.json'
+        file_path = 'tests/data/offers/offers.json'
         actual_data = read_json_file(file_path)
         self.assertIsNotNone(actual_data)
         self.assertIsInstance(actual_data, list)
@@ -63,7 +45,7 @@ class TestUtils(unittest.TestCase):
 
     def test_read_json_data_file_absent(self):
         """Tests that we are able to set offers correctly"""
-        file_path = 'tests/data/offers_absent.json'
+        file_path = 'tests/data/offers/offers_absent.json'
         with self.assertRaises(FileNotFoundError):
             read_json_file(file_path)
 
@@ -114,8 +96,10 @@ class TestUtils(unittest.TestCase):
 
     def test_round_down_2_digits(self):
         """Tests that offers should not be set in case of invalid data"""
-        print(round_down_2_digits(4.196667))
         self.assertEqual(round_down_2_digits(4.196667), 4.19)
+        self.assertEqual(round_down_2_digits(4.2), 4.2)
+        self.assertEqual(round_down_2_digits(4), 4)
+        self.assertEqual(round_down_2_digits(4.192), 4.19)
 
 
 if __name__ == "__main__":

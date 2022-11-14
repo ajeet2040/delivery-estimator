@@ -12,7 +12,7 @@ class TestDeliveryCostEstimator(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        test_offers_path = 'tests/data/offers.json'
+        test_offers_path = 'tests/data/offers/offers.json'
         cls.test_offers = read_json_file(test_offers_path)
         cls.test_packages = [
             {
